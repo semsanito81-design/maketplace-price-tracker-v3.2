@@ -1,0 +1,20 @@
+{
+  "name": "price-tracker",
+  "version": "3.1.0.5",
+  "description": "Price Tracker — Ozon, WB, Яндекс.Маркет, AliExpress",
+  "private": true,
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:core": "jest tests/core.test.js",
+    "test:storage": "jest tests/storage.test.js",
+    "test:wb": "jest tests/wildberries.test.js",
+    "test:ozon": "jest tests/ozon.test.js",
+    "test:smoke": "jest tests/smoke.test.js"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  }
+}

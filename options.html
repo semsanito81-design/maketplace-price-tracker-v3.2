@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Price Tracker — Настройки</title>
+    <link rel="stylesheet" href="options.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Price Tracker — Настройки</h1>
+            <span class="version" id="version">v3.1.0</span>
+        </header>
+
+        <!-- ОБЩИЕ -->
+        <section class="card">
+            <h2>⚙️ Общие настройки</h2>
+            <label class="checkbox">
+                <input type="checkbox" id="show-widget" checked>
+                <span>Показывать виджет на страницах товаров</span>
+            </label>
+            <label class="checkbox">
+                <input type="checkbox" id="auto-update" checked>
+                <span>Автоматически обновлять цену при открытии товара</span>
+            </label>
+            <label class="checkbox">
+                <input type="checkbox" id="open-current-tab">
+                <span>Открывать товары в текущей вкладке (иначе — в новой)</span>
+            </label>
+        </section>
+
+        <!-- УВЕДОМЛЕНИЯ -->
+        <section class="card">
+            <h2>🔔 Уведомления</h2>
+            <label class="checkbox">
+                <input type="checkbox" id="notifications-enabled" checked>
+                <span>Включить уведомления об изменении цен</span>
+            </label>
+            <label class="field">
+                <span>Порог изменения цены (%):</span>
+                <input type="number" id="threshold" min="1" max="50" value="5">
+            </label>
+            <label class="checkbox">
+                <input type="checkbox" id="notify-min" checked>
+                <span>Уведомлять о новой минимальной цене</span>
+            </label>
+            <button class="btn btn-secondary" id="test-notification">📨 Тестовое уведомление</button>
+        </section>
+
+        <!-- ХРАНИЛИЩЕ -->
+        <section class="card">
+            <h2>💾 Хранилище</h2>
+            <div class="stats">
+                <div><span>Товаров в списке:</span><b id="stat-tracked">0</b></div>
+                <div><span>Записей истории:</span><b id="stat-history">0</b></div>
+                <div><span>Размер данных:</span><b id="stat-size">0 КБ</b></div>
+                <div><span>Последний бэкап:</span><b id="stat-backup">—</b></div>
+            </div>
+            <div class="actions">
+                <button class="btn btn-secondary" id="create-backup">💾 Создать бэкап</button>
+                <button class="btn btn-secondary" id="restore-backup">♻️ Восстановить</button>
+                <button class="btn btn-secondary" id="export-all-json">📥 Экспорт JSON</button>
+                <button class="btn btn-secondary" id="import-json">📂 Импорт JSON</button>
+                <button class="btn btn-danger" id="clear-all">🗑️ Очистить всё</button>
+            </div>
+        </section>
+
+        <!-- КАТЕГОРИИ -->
+        <section class="card">
+            <h2>📁 Категории товаров</h2>
+            <p style="font-size:12px;color:#888;margin-bottom:12px;">
+                Встроенные категории + ваши собственные
+            </p>
+            <div id="categories-manager"></div>
+            <div class="add-category">
+                <input type="text" id="new-cat-name" placeholder="Название категории" maxlength="30">
+                <input type="text" id="new-cat-icon" placeholder="Иконка (эмодзи)" maxlength="4" style="width:80px;">
+                <button class="btn btn-secondary" id="add-category-btn">➕ Добавить</button>
+            </div>
+        </section>
+
+        <!-- О РАСШИРЕНИИ -->
+        <section class="card">
+            <h2>ℹ️ О расширении</h2>
+            <p><b>Price Tracker</b> — отслеживание цен на Ozon, WB, Яндекс.Маркет, AliExpress</p>
+            <p>Автор: Негодин А.А.</p>
+            <p>Версия: <b id="version-full">3.1.0</b></p>
+        </section>
+    </div>
+    <script src="storage.js"></script>
+    <script src="options.js"></script>
+</body>
+</html>
