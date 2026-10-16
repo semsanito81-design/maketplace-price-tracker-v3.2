@@ -1,4 +1,4 @@
-# build.ps1 — сборка .zip для Firefox AMO
+﻿# build.ps1 — сборка .zip для Firefox AMO
 # Использование: .\build.ps1
 
 # Цвета для вывода
