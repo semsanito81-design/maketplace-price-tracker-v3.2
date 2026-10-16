@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Price Tracker</title>
+    <style>
+        .footer .restore-backup {
+            background: none; border: none;
+            color: #f39c12; cursor: pointer; font-size: 11px;
+        }
+        .footer .restore-backup:hover { text-decoration: underline; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            width: 420px; max-height: 500px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa; padding: 12px 16px; overflow-y: auto;
+        }
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2px solid #005bff;
+        }
+        .header h2 { font-size: 16px; color: #1a1a2e; }
+        .header .badge {
+            font-size: 11px; color: #999; background: #f0f0f0;
+            padding: 2px 10px; border-radius: 12px;
+        }
+        .stats {
+            display: flex; gap: 12px; margin-bottom: 12px;
+            font-size: 12px; color: #666;
+        }
+        .stats span {
+            background: white; padding: 4px 12px; border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .tracked-list {
+            list-style: none; padding: 0; margin: 0;
+            max-height: 320px; overflow-y: auto;
+        }
+        .tracked-item {
+            background: white; padding: 10px 12px; border-radius: 10px;
+            margin-bottom: 6px; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            display: flex; justify-content: space-between; align-items: center;
+            transition: all 0.15s; border-left: 3px solid #005bff;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .tracked-item:hover {
+            transform: scale(1.01);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            background: #f0f6ff;
+            transform: translateX(2px);
+        }
+        .tracked-item .info { flex: 1; min-width: 0; }
+        .tracked-item .name {
+            font-size: 12px; font-weight: 500; color: #1a1a2e;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            text-decoration: none;
+        }
+        .tracked-item:hover .name {
+            color: #005bff;
+            text-decoration: underline;
+        }
+        .tracked-item .market { font-size: 10px; color: #999; margin-top: 2px; }
+        .tracked-item .market .site {
+            display: inline-block; padding: 0 6px; border-radius: 4px; font-weight: 600;
+        }
+        .tracked-item .market .site.ozon { background: #e8f0fe; color: #005bff; }
+        .tracked-item .market .site.wildberries { background: #fce8e6; color: #e8432e; }
+        .tracked-item .market .site.yandex { background: #e6f7e6; color: #2e7d32; }
+        .tracked-item .price-block { text-align: right; flex-shrink: 0; margin-left: 12px; }
+        .tracked-item .current-price { font-size: 15px; font-weight: bold; color: #005bff; }
+        .tracked-item .original-price { font-size: 11px; color: #999; text-decoration: line-through; }
+        .tracked-item .discount-badge {
+            font-size: 10px; color: white; background: #ff4757;
+            padding: 1px 8px; border-radius: 10px; margin-left: 4px;
+        }
+        .tracked-item .remove-btn {
+            background: none; border: none; color: #ccc; font-size: 16px;
+            cursor: pointer; padding: 0 4px; margin-left: 8px; transition: color 0.2s;
+        }
+        .tracked-item .remove-btn:hover { color: #ff4757; }
+        .empty { text-align: center; padding: 30px 20px; color: #999; font-size: 14px; }
+        .empty .icon { font-size: 32px; display: block; margin-bottom: 8px; }
+        .empty small { display: block; font-size: 12px; color: #ccc; margin-top: 4px; }
+        .footer {
+            margin-top: 10px; padding-top: 10px; border-top: 1px solid #e8e8e8;
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 11px; color: #999;
+        }
+        .footer .clear-all { background: none; border: none; color: #ff4757; cursor: pointer; font-size: 11px; }
+        .footer .clear-all:hover { text-decoration: underline; }
+        .footer .refresh-btn { background: none; border: none; color: #005bff; cursor: pointer; font-size: 14px; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 2px; }
+        ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
+        .footer .refresh-all {
+            background: none; border: none;
+            color: #005bff; cursor: pointer; font-size: 11px;}
+        .footer .refresh-all:hover { text-decoration: underline; }
+        .filters {
+            margin-bottom: 10px;
+        }
+        .search {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 12px;
+            margin-bottom: 8px;
+            background: white;
+        }
+        .search:focus {
+            outline: none;
+            border-color: #005bff;
+        }
+        .categories {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+        .category-btn {
+            background: white;
+            border: 1px solid #e0e0e0;
+            color: #555;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .category-btn:hover {
+            background: #f0f6ff;
+            border-color: #005bff;
+        }
+        .category-btn.active {
+            background: #005bff;
+            color: white;
+            border-color: #005bff;
+        }
+        .category-btn .count {
+            background: rgba(0,0,0,0.1);
+            padding: 1px 6px;
+            border-radius: 8px;
+            font-size: 10px;
+        }
+        .category-btn.active .count {
+            background: rgba(255,255,255,0.25);
+        }
+        .tags-line {
+            font-size: 10px;
+            color: #9b59b6;
+            margin-top: 2px;
+        }
+        .footer .restore-backup,
+        .footer .refresh-all {
+            background: none; border: none;
+            cursor: pointer; font-size: 11px;
+        }
+        .footer .restore-backup { color: #f39c12; }
+        .footer .refresh-all { color: #005bff; }
+        .footer .restore-backup:hover,
+        .footer .refresh-all:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>📊 Price Tracker</h2>
+        <span class="badge" id="count-badge">0 товаров</span>
+    </div>
+    <div class="filters">
+        <input type="text" id="search-input" placeholder="🔍 Поиск по названию или тегам..." class="search">
+        <div class="categories" id="categories"></div>
+    </div>
+    <div class="stats" id="stats">
+        <span>📦 <span id="total-count">0</span></span>
+        <span>📈 <span id="total-change">0 ₽</span></span>
+        <span>🔥 <span id="discount-count">0</span> со скидкой</span>
+    </div>
+    <div id="tracked-container">
+        <div class="empty">
+            <span class="icon">📭</span>
+            Нет отслеживаемых товаров
+            <small>Откройте товар на Ozon, Wildberries или Яндекс.Маркет и нажмите "Отслеживать"</small>
+        </div>
+    </div>
+    <div class="footer">
+        <button class="clear-all" id="clear-all">🗑️ Очистить всё</button>
+        <button class="restore-backup" id="restore-backup" title="Восстановить из резервной копии">♻️ Восстановить</button>
+        <button class="refresh-all" id="refresh-all" title="Обновить все цены">🔄 Обновить</button>
+        <span>🔄 <button class="refresh-btn" id="refresh-btn">⟳</button></span>
+    </div>
+    <script src="storage.js"></script>
+    <script src="popup.js"></script>
+</body>
+</html>
