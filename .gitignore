@@ -1,0 +1,12 @@
+node_modules/
+package-lock.json
+coverage/
+.venv/
+venv/
+*.zip
+*.xpi
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
